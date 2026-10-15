@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- POISTA seuraava rivi julkaisuhetkellä, jotta Google löytää sivun -->
+<meta name="robots" content="noindex">
+<title>Kauppakarpaasi | Autokauppa selkokielellä</title>
+<meta name="description" content="Autokauppa selkokielellä, suoraan automyyjältä. Tilaa ilmainen vaihtoauto-opas ja viikoittainen vinkki.">
+<style>
+  /* Kauppakarpaasi, sivupohja v1. Värit: valkoinen, musta, punainen aksentti. Järjestelmäfontit (ei ulkoisia pyyntöjä). */
+  :root {
+    --white: #ffffff;
+    --black: #0e0e0e;
+    --grey: #5b5b5b;
+    --line: #e4e4e4;
+    --soft: #f5f5f4;
+    --red: #d4151c;
+    --red-dark: #a90f15;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--font); color: var(--black); background: var(--white); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+
+  header.top { padding-block: 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.02em; font-size: 1.15rem; text-decoration: none; color: var(--black); }
+  .brand span { color: var(--red); }
+  /* LOGO: korvaa tämä ympyrä jääkarhun logolla (Squarespacessa: Site Title & Logo) */
+  .logo-slot { width: 34px; height: 34px; border-radius: 50%; background: var(--black); border: 3px solid var(--red); flex: none; }
+
+  /* 1. Yläosa */
+  .hero { padding-block: 32px 52px; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px; align-items: center; }
+  h1 { font-size: clamp(2.2rem, 6vw, 3.9rem); line-height: 1.04; letter-spacing: -0.035em; font-weight: 850; margin: 0 0 18px; text-wrap: balance; }
+  h1 em { font-style: normal; color: var(--red); }
+  .lead { font-size: 1.12rem; color: var(--grey); max-width: 38ch; margin: 0; }
+
+  .card { background: var(--black); color: var(--white); border-radius: 6px; padding: 28px; }
+  .card h2 { margin: 0 0 6px; font-size: 1.3rem; letter-spacing: -0.01em; }
+  .card p.sub { margin: 0 0 18px; color: #c9c9c9; font-size: 0.95rem; }
+  label.field { display: block; font-size: 0.85rem; font-weight: 600; margin: 0 0 6px; }
+  input[type="text"], input[type="email"] { width: 100%; font: inherit; padding: 13px 14px; border-radius: 4px; border: 2px solid transparent; background: var(--white); color: var(--black); margin-bottom: 14px; }
+  input:focus-visible, button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: #d8d8d8; margin: 4px 0 16px; }
+  .consent input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--red); flex: none; }
+  .consent a { color: var(--white); }
+  button.cta { width: 100%; font: inherit; font-weight: 700; font-size: 1.05rem; padding: 14px 18px; border: 0; border-radius: 4px; background: var(--red); color: var(--white); cursor: pointer; }
+  button.cta:hover { background: var(--red-dark); }
+  .fineprint { font-size: 0.78rem; color: #aaa; margin: 12px 0 0; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .thanks { display: none; background: var(--soft); color: var(--black); border-left: 4px solid var(--red); padding: 12px 14px; margin-bottom: 18px; font-weight: 600; }
+  .thanks.show { display: block; }
+
+  /* 2. Todistusrivi */
+  .proof { background: var(--black); color: var(--white); padding-block: 26px; }
+  .proof-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .stat strong { display: block; font-size: clamp(1.4rem, 3.6vw, 2rem); letter-spacing: -0.02em; color: var(--white); line-height: 1.1; }
+  .stat span { font-size: 0.88rem; color: #c9c9c9; }
+  .stat strong b { color: var(--red); font-weight: 850; }
+
+  section.block { padding-block: 56px; border-top: 1px solid var(--line); }
+  section.block:first-of-type { border-top: 0; }
+  section.block h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.025em; margin: 0 0 26px; line-height: 1.1; text-wrap: balance; }
+
+  /* 3. Mitä saat */
+  .gets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .get { border-top: 3px solid var(--black); padding-top: 14px; }
+  .get.main { border-top-color: var(--red); }
+  .get h3 { margin: 0 0 6px; font-size: 1.1rem; }
+  .get p { margin: 0; color: var(--grey); }
+
+  /* 4. Kuka olen */
+  .about { display: grid; grid-template-columns: 0.8fr 1.4fr; gap: 40px; align-items: start; }
+  .photo { aspect-ratio: 4 / 5; max-width: 100%; background: var(--soft); border: 2px dashed #bdbdbd; display: grid; place-items: center; text-align: center; padding: 16px; color: var(--grey); font-size: 0.9rem; border-radius: 6px; }
+  .about p { margin: 0 0 14px; max-width: 58ch; }
+  .btn { display: inline-block; margin-top: 8px; background: var(--red); color: var(--white); font-weight: 700; padding: 14px 24px; border-radius: 4px; text-decoration: none; }
+  .btn:hover { background: var(--red-dark); }
+
+  /* 5. Videot */
+  .videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .video { display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: var(--black); }
+  .thumb { aspect-ratio: 9 / 16; max-height: 420px; width: 100%; background: var(--black); border-radius: 6px; display: grid; place-items: center; color: var(--white); font-weight: 700; position: relative; }
+  .thumb::after { content: ""; position: absolute; width: 52px; height: 52px; border-radius: 50%; background: var(--red); opacity: .92; }
+  .thumb::before { content: ""; position: absolute; z-index: 1; border-style: solid; border-width: 10px 0 10px 16px; border-color: transparent transparent transparent var(--white); margin-left: 4px; }
+  .video strong { font-size: 1.02rem; }
+  .video small { color: var(--grey); }
+  .note { color: var(--grey); font-size: 0.88rem; margin: 18px 0 0; }
+
+  /* 7. Toinen lomake */
+  .final { background: var(--soft); }
+  .final .wrap { max-width: 640px; }
+  .final h2 { text-align: center; }
+  .final p.center { text-align: center; margin: -10px 0 24px; color: var(--grey); }
+
+  footer { padding-block: 32px 48px; font-size: 0.88rem; color: var(--grey); }
+  .socials { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0 0 16px; }
+  .socials a { color: var(--black); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--red); }
+  details { margin-top: 14px; max-width: 70ch; }
+  summary { cursor: pointer; font-weight: 600; color: var(--black); }
+  details p { margin: 10px 0 0; }
+
+  @media (max-width: 820px) {
+    .hero-grid, .about { grid-template-columns: 1fr; gap: 28px; }
+    .gets, .videos { grid-template-columns: 1fr; }
+    .proof-grid { grid-template-columns: repeat(2, 1fr); }
+    .photo { max-width: 280px; }
+    .card { padding: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap"><a class="brand" href="#"><span class="logo-slot" aria-hidden="true"></span>Kauppakarpaasi<span>.</span></a></div>
+</header>
+
+<main>
+  <!-- 1. YLÄOSA -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Autokauppa selkokielellä, <em>suoraan automyyjältä.</em></h1>
+        <p class="lead">Tilaa ilmainen opas: näin saat vaihtoautostasi parhaan hinnan. Saat lisäksi vinkit autokauppaan ja linkit uusiin videoihin.</p>
+      </div>
+
+      <div class="card" id="tilaa">
+        <div class="thanks" id="thanks" role="status">Kiitos! Vahvista tilauksesi sähköpostiin lähetetystä viestistä.</div>
+        <h2>Hae ilmainen vaihtoauto-opas</h2>
+        <p class="sub">Opas tulee sähköpostiisi, kun olet vahvistanut tilauksen.</p>
+        <!-- TÄRKEÄÄ: korvaa action sähköpostipalvelun lomakeosoitteella, tai liitä palvelun upotuskoodi tämän lomakkeen tilalle. -->
+        <form action="LIITA_LOMAKKEEN_OSOITE_TAHAN" method="post" id="signup">
+          <label class="field" for="fname">Etunimi</label>
+          <input type="text" id="fname" name="fname" autocomplete="given-name" placeholder="Etunimesi">
+          <label class="field" for="email">Sähköposti</label>
+          <input type="email" id="email" name="email" autocomplete="email" placeholder="sinä@esimerkki.fi" required>
+          <div class="hp" aria-hidden="true"><label for="website">Älä täytä tätä</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+          <label class="consent"><input type="checkbox" name="consent" required><span>Haluan vastaanottaa Kauppakarpaasin uutiskirjeen sähköpostiini. Voin perua tilauksen milloin tahansa. Lue <a href="#tietosuoja">tietosuojaseloste</a>.</span></label>
+          <button class="cta" type="submit">Hae opas</button>
+          <p class="fineprint">Ei roskapostia. Peruutuslinkki on jokaisen viestin alalaidassa.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. TODISTUSRIVI. Päivitä luvut itse ennen julkaisua ja parin kuukauden välein. -->
+  <section class="proof" aria-label="Lyhyesti minusta">
+    <div class="wrap proof-grid">
+      <div class="stat"><strong><b>Lähes 5</b> vuotta</strong><span>autoalalla eri tehtävissä</span></div>
+      <div class="stat"><strong><b>Yli 400</b></strong><span>myytyä autoa</span></div>
+      <div class="stat"><strong><b>Miljoonia</b></strong><span>katseluja TikTokissa</span></div>
+      <div class="stat"><strong><b>Lähes 7 000</b></strong><span>seuraajaa</span></div>
+    </div>
+  </section>
+
+  <!-- 3. MITÄ SAAT -->
+  <section class="block">
+    <div class="wrap">
+      <h2>Mitä saat</h2>
+      <div class="gets">
+        <div class="get main">
+          <h3>Vaihtoauto-opas</h3>
+          <p>Näin saat vaihtoautostasi parhaan hinnan: miten arvio syntyy ja mitä kannattaa tehdä ennen kauppoja.</p>
+        </div>
+        <div class="get">
+          <h3>Vinkit autokauppaan</h3>
+          <p>Lyhyitä, käytännöllisiä vinkkejä, joiden avulla teet autokaupan varmemmin.</p>
+        </div>
+        <div class="get">
+          <h3>Linkit uusiin videoihin</h3>
+          <p>Uusin video suoraan viestiin, jos et halua kelailla feediä.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. KUKA OLEN -->
+  <section class="block">
+    <div class="wrap about">
+      <div class="photo">Kuva sinusta tähän<br>(pysty- tai neliökuva, kasvot selvästi näkyvissä)</div>
+      <div>
+        <h2>Autokaupassa kannattaa olla samalla puolella</h2>
+        <p>Olen Renny, automyyjä. Olen ollut lähes viisi vuotta autoalalla eri tehtävissä ja myynyt yli 400 autoa. Olen nähnyt sen puolen autokaupasta, jota ostaja harvoin näkee.</p>
+        <p>Suurin virhe, jonka näen: ostaja ei tutki kokonaisuutta ja pimittää myyjältä tietoja. Ei kerro, mitä on ostamassa toisesta liikkeestä, eikä sitä, mitä itse ajattelee eri asioista. Silloin myyjä ei pysty auttamaan sinua parhaalla mahdollisella tavalla.</p>
+        <p>Kokemukseni mukaan parhaat tarjoukset syntyvät, kun olet myyjän kanssa samalla puolella, kuin kaverin kanssa.</p>
+        <p>Kauppakarpaasissa selitän asiat selkokielellä ja kerron suoraan, mitä kannattaa tarkistaa ja kysyä, jotta tiedät mitä olet tekemässä.</p>
+        <p><strong>Jos haluat tehdä seuraavan autokauppasi rennosti ja kaveripohjalta, hae alta vinkit siihen, miten saat vaihtoautostasi parhaan hinnan, ja liity sähköpostilistalle.</strong></p>
+        <a class="btn" href="#tilaa">Hae opas ja liity listalle</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. VIDEOT. Squarespacessa: käytä Video- tai Embed-lohkoa ja liitä kunkin videon oma linkki. -->
+  <section class="block">
+    <div class="wrap">
+      <h2>Katso videoita</h2>
+      <div class="videos">
+        <a class="video" href="https://www.tiktok.com/@KAUPPAKARPAASI" target="_blank" rel="noopener">
+          <div class="thumb" aria-hidden="true"></div>
+          <strong>TikTok</strong><small>Lyhyet vinkit ja uusimmat videot</small>
+        </a>
+        <a class="video" href="https://www.youtube.com/@KAUPPAKARPAASI" target="_blank" rel="noopener">
+          <div class="thumb" aria-hidden="true"></div>
+          <strong>YouTube</strong><small>Pidemmät jaksot</small>
+        </a>
+        <a class="video" href="https://www.instagram.com/KAUPPAKARPAASI" target="_blank" rel="noopener">
+          <div class="thumb" aria-hidden="true"></div>
+          <strong>Instagram</strong><small>Reels ja arkea</small>
+        </a>
+      </div>
+      <p class="note">Vaihda linkit omiin profiileihisi ja valitse jokaiselle alustalle yksi paras video.</p>
+    </div>
+  </section>
+
+  <!-- 7. TOINEN LOMAKE -->
+  <section class="block final">
+    <div class="wrap">
+      <h2>Tulossa autokauppoihin?</h2>
+      <p class="center">Hae vaihtoauto-opas ennen kuin teet päätöksen.</p>
+      <div class="card">
+        <!-- Käytä tässä samaa lomaketta tai upotuskoodia kuin yläosassa. -->
+        <form action="LIITA_LOMAKKEEN_OSOITE_TAHAN" method="post" id="signup2">
+          <label class="field" for="email2">Sähköposti</label>
+          <input type="email" id="email2" name="email" autocomplete="email" placeholder="sinä@esimerkki.fi" required>
+          <label class="consent"><input type="checkbox" name="consent" required><span>Haluan vastaanottaa Kauppakarpaasin uutiskirjeen. Voin perua tilauksen milloin tahansa.</span></label>
+          <button class="cta" type="submit">Hae opas</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 8. ALAOSA -->
+<footer>
+  <div class="wrap">
+    <div class="socials">
+      <a href="https://www.tiktok.com/@KAUPPAKARPAASI" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://www.youtube.com/@KAUPPAKARPAASI" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/KAUPPAKARPAASI" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div>© <span id="year">2026</span> Kauppakarpaasi. Renny Poutanen.</div>
+    <details id="tietosuoja">
+      <summary>Tietosuojaseloste</summary>
+      <p><strong>Rekisterinpitäjä:</strong> Renny Poutanen. Yhteys: LIITA_SAHKOPOSTIOSOITE.</p>
+      <p><strong>Mitä tietoja kerätään:</strong> sähköpostiosoite ja etunimi, jos annat sen.</p>
+      <p><strong>Mihin tietoja käytetään:</strong> uutiskirjeen ja tilaamasi oppaan lähettämiseen. Perusteena on antamasi suostumus.</p>
+      <p><strong>Kenelle tietoja luovutetaan:</strong> uutiskirjepalvelun tarjoaja toimii henkilötietojen käsittelijänä (PALVELUN_NIMI).</p>
+      <p><strong>Säilytysaika:</strong> kunnes peruutat tilauksen.</p>
+      <p><strong>Oikeutesi:</strong> voit pyytää tietojesi tarkastusta, oikaisua tai poistoa ja perua tilauksen milloin tahansa. Voit myös tehdä valituksen tietosuojavaltuutetulle.</p>
+    </details>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  if (/[?&]kiitos/.test(location.search)) { document.getElementById('thanks').classList.add('show'); }
+</script>
+</body>
+</html>
