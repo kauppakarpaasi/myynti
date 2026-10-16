@@ -79,11 +79,14 @@
   .btn:hover { background: var(--red-dark); }
 
   /* 5. Videot */
-  .videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
   .video { display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: var(--black); }
   .thumb { aspect-ratio: 9 / 16; max-height: 420px; width: 100%; background: var(--black); border-radius: 6px; display: grid; place-items: center; color: var(--white); font-weight: 700; position: relative; }
-  .thumb::after { content: ""; position: absolute; width: 52px; height: 52px; border-radius: 50%; background: var(--red); opacity: .92; }
-  .thumb::before { content: ""; position: absolute; z-index: 1; border-style: solid; border-width: 10px 0 10px 16px; border-color: transparent transparent transparent var(--white); margin-left: 4px; }
+  .thumb { overflow: hidden; }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .thumb.wide { aspect-ratio: 16 / 9; }
+  .thumb::after { content: ""; position: absolute; width: 52px; height: 52px; border-radius: 50%; background: var(--red); opacity: .92; z-index: 1; }
+  .thumb::before { content: ""; position: absolute; z-index: 1; border-style: solid; border-width: 10px 0 10px 16px; border-color: transparent transparent transparent var(--white); margin-left: 4px; z-index: 2; }
   .video strong { font-size: 1.02rem; }
   .video small { color: var(--grey); }
   .note { color: var(--grey); font-size: 0.88rem; margin: 18px 0 0; }
@@ -198,16 +201,16 @@
       <h2>Katso videoita</h2>
       <div class="videos">
         <a class="video" href="https://www.tiktok.com/@rennypoutanen/video/7664892477266087190" target="_blank" rel="noopener">
-          <div class="thumb" aria-hidden="true"></div>
-          <strong>TikTok</strong><small>Katso video TikTokissa</small>
+          <div class="thumb" aria-hidden="true"><img src="kuvat/tiktok.jpg" alt="" loading="lazy"></div>
+          <strong>V90 vs XC90: kumpi vie voiton?</strong><small>Katso video TikTokissa</small>
         </a>
         <a class="video" href="https://youtu.be/DC9SeXl6QGE" target="_blank" rel="noopener">
-          <div class="thumb" aria-hidden="true"></div>
-          <strong>YouTube</strong><small>Katso video YouTubessa</small>
+          <div class="thumb wide" aria-hidden="true"><img src="kuvat/youtube.jpg" alt="" loading="lazy"></div>
+          <strong>Vaihdoin autoa taas??</strong><small>Katso video YouTubessa</small>
         </a>
         <a class="video" href="https://www.instagram.com/reel/DDuO2LcoV9T/" target="_blank" rel="noopener">
-          <div class="thumb" aria-hidden="true"></div>
-          <strong>Instagram</strong><small>Katso video Instagramissa</small>
+          <div class="thumb" aria-hidden="true"><img src="kuvat/instagram.jpg" alt="" loading="lazy"></div>
+          <strong>Katso Reel Instagramissa</strong><small>Instagram</small>
         </a>
       </div>
       <!-- TODO: lisää kansikuvat ja videoiden otsikot -->
