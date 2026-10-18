@@ -85,12 +85,19 @@
   .btn { display: inline-block; margin-top: 0; background: var(--red); color: var(--white); font-weight: 700; padding: 14px 24px; border-radius: 4px; text-decoration: none; }
   .btn:hover { background: var(--red-dark); }
 
-  /* Miten kauppa etenee */
-  .steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .steps li { counter-increment: s; border-top: 3px solid var(--black); padding-top: 14px; }
-  .steps li::before { content: counter(s); display: block; font-weight: 850; font-size: 2rem; line-height: 1; color: var(--red); margin-bottom: 8px; }
-  .steps h3 { margin: 0 0 6px; font-size: 1.1rem; }
-  .steps p { margin: 0; color: var(--grey); }
+  /* Miten kauppa etenee: aikajana, jonka punainen viiva täyttyy vierittäessä */
+  .tl { position: relative; max-width: 720px; margin: 0; padding: 0 0 0 60px; list-style: none; --p: 0px; }
+  .tl::before { content: ""; position: absolute; left: 17px; top: 18px; bottom: 18px; width: 3px; background: var(--line); border-radius: 2px; }
+  .tl::after { content: ""; position: absolute; left: 17px; top: 18px; width: 3px; height: var(--p); background: var(--red); border-radius: 2px; }
+  .tl-step { position: relative; padding-bottom: 34px; }
+  .tl-step:last-child { padding-bottom: 0; }
+  .tl-dot { position: absolute; left: -60px; top: 0; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 1rem; background: var(--white); color: var(--black); border: 3px solid var(--black); z-index: 1; }
+  .tl-step h3 { margin: 4px 0 6px; font-size: 1.2rem; letter-spacing: -0.01em; }
+  .tl-step p { margin: 0; color: var(--grey); max-width: 52ch; }
+  .tl.js .tl-step { opacity: .38; transform: translateY(8px); transition: opacity .45s ease, transform .45s ease; }
+  .tl.js .tl-step.on { opacity: 1; transform: none; }
+  .tl.js .tl-step.on .tl-dot { background: var(--red); border-color: var(--red); color: var(--white); }
+  .tl.js .tl-dot { transition: background .3s ease, border-color .3s ease, color .3s ease; }
   .section-lead { color: var(--grey); max-width: 60ch; margin: -12px 0 24px; }
 
   /* 5. Videot */
@@ -126,13 +133,13 @@
 
   @media (max-width: 820px) {
     .hero-grid, .about { grid-template-columns: 1fr; gap: 28px; }
-    .gets, .steps { grid-template-columns: 1fr; }
+    .gets { grid-template-columns: 1fr; }
     .videos { grid-template-columns: 1fr; }
     .proof-grid { grid-template-columns: repeat(2, 1fr); }
     .photo { max-width: 280px; }
     .card { padding: 22px; }
   }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .tl.js .tl-step, .tl.js .tl-dot { transition: none; transform: none; } }
 </style>
 </head>
 <body>
@@ -208,20 +215,23 @@
   <section class="block" id="miten">
     <div class="wrap">
       <h2>Miten kauppa etenee</h2>
-      <p class="section-lead">Kolme vaihetta, joista tiedätte koko ajan, missä mennään.</p>
-      <ol class="steps">
-        <li>
-          <h3>Puhelu ja tarpeen kartoitus</h3>
-          <p>Soitan teille ja kartoitamme, mitä tarvitsette. Jos teillä on jo sopiva auto tiedossa tai vaihtoauto, käymme tiedot läpi tarjousta varten. Esittelen vaihtoehdot tarpeenne perusteella.</p>
-        </li>
-        <li>
-          <h3>Auton läpikäynti ja tarjous</h3>
-          <p>Jos sopivaa autoa ei vielä ole löytynyt, etsin sen puolestanne. Käymme auton läpi tarpeenne perusteella. Jos auto kuulostaa hyvältä ja voitte tehdä kaupat ilman lisäkysymyksiä, käymme tarjouksen läpi ja sovimme luovutusajan.</p>
-        </li>
-        <li>
-          <h3>Luovutus</h3>
-          <p>Luovutus sovitaan tarkkaan aikaan ja paikkaan, joten tiedätte etukäteen, milloin ja missä auto on valmis.</p>
-        </li>
+      <p class="section-lead">Viisi vaihetta, joista tiedätte koko ajan, missä mennään.</p>
+      <ol class="tl" id="tl">
+        <li class="tl-step on"><span class="tl-dot" aria-hidden="true">1</span>
+          <h3>Tarvekartoitus</h3>
+          <p>Soitan teille ja kartoitamme, mitä tarvitsette autolta.</p></li>
+        <li class="tl-step on"><span class="tl-dot" aria-hidden="true">2</span>
+          <h3>Mahdollisen vaihtoauton tiedot</h3>
+          <p>Jos teillä on vaihtoauto, käymme sen tiedot läpi tarjousta varten.</p></li>
+        <li class="tl-step on"><span class="tl-dot" aria-hidden="true">3</span>
+          <h3>Sopivan vaihtoehdon esittely</h3>
+          <p>Esittelen vaihtoehdon tarpeenne perusteella. Jos sopivaa autoa ei vielä ole löytynyt, etsin sen puolestanne.</p></li>
+        <li class="tl-step on"><span class="tl-dot" aria-hidden="true">4</span>
+          <h3>Tarjouksen läpikäynti</h3>
+          <p>Kun sopiva vaihtoehto on löytynyt, käymme tarjouksen läpi.</p></li>
+        <li class="tl-step on"><span class="tl-dot" aria-hidden="true">5</span>
+          <h3>Luovutusajan sopiminen</h3>
+          <p>Sovimme luovutusajan, jossa pääsette vielä koeajamaan auton ennen lopullisia kauppoja.</p></li>
       </ol>
     </div>
   </section>
@@ -325,6 +335,33 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  (function () {
+    var tl = document.getElementById('tl');
+    if (!tl || !('requestAnimationFrame' in window)) return;
+    var steps = Array.prototype.slice.call(tl.querySelectorAll('.tl-step'));
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    tl.classList.add('js');
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var r = tl.getBoundingClientRect();
+      var mark = window.innerHeight * 0.62;
+      var total = r.height - 36;
+      var p = Math.max(0, Math.min(total, mark - r.top - 18));
+      if (reduce) p = total;
+      tl.style.setProperty('--p', p + 'px');
+      steps.forEach(function (el) {
+        var d = el.querySelector('.tl-dot').getBoundingClientRect();
+        var on = reduce || d.top + 19 < mark;
+        el.classList.toggle('on', on);
+      });
+    }
+    function req() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', req, { passive: true });
+    window.addEventListener('resize', req);
+    update();
+  })();
   if (/[?&]kiitos/.test(location.search)) { document.getElementById('thanks').classList.add('show'); }
 </script>
 </body>
