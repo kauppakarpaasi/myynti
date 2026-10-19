@@ -285,6 +285,7 @@
       <p class="center">Kertokaa, mitä etsitte. Soitan teille.</p>
       <div class="card">
         <!-- TÄRKEÄÄ: korvaa action lomakepalvelun osoitteella (viestit menevät Rennyn omaan osoitteeseen). -->
+        <div class="thanks" id="c-status" role="status"></div>
         <form action="LIITA_YHTEYSLOMAKKEEN_OSOITE" method="post" id="contact">
           <label class="field" for="c-name">Nimi</label>
           <input type="text" id="c-name" name="name" autocomplete="name" required>
@@ -305,9 +306,9 @@
         <a class="wa" href="https://wa.me/358503110329" target="_blank" rel="noopener">Kirjoita WhatsAppissa</a>
       </div>
       <p class="contact-alt">
-        <!-- TODO: luo osoite renny@kauppakarpaasi.com Google Workspaceen ennen julkaisua -->
+        <!-- TODO: varmista, että osoite kauppakarpaasi@kauppakarpaasi.com on olemassa Google Workspacessa -->
         <a href="tel:+358503110329">050 311 0329</a>
-        <a href="mailto:renny@kauppakarpaasi.com">renny@kauppakarpaasi.com</a>
+        <a href="mailto:kauppakarpaasi@kauppakarpaasi.com">kauppakarpaasi@kauppakarpaasi.com</a>
       </p>
     </div>
   </section>
@@ -324,7 +325,7 @@
     <div>© <span id="year">2026</span> Kauppakarpaasi. Renny Poutanen.</div>
     <details id="tietosuoja">
       <summary>Tietosuojaseloste</summary>
-      <p><strong>Rekisterinpitäjä:</strong> Renny Poutanen. Yhteys: renny@kauppakarpaasi.com. <!-- TODO: vahvista rekisterinpitäjä työnantajan kanssa, koska kauppa tehdään heidän kauttaan --></p>
+      <p><strong>Rekisterinpitäjä:</strong> Renny Poutanen. Yhteys: kauppakarpaasi@kauppakarpaasi.com. <!-- TODO: vahvista rekisterinpitäjä työnantajan kanssa, koska kauppa tehdään heidän kauttaan --></p>
       <p><strong>Mitä tietoja kerätään:</strong> uutiskirjeen tilaajalta sähköpostiosoite ja etunimi. Yhteydenottolomakkeella nimi, puhelinnumero sekä vapaaehtoisesti toiveet, budjetti ja vaihtoauton tiedot.</p>
       <p><strong>Mihin tietoja käytetään:</strong> uutiskirjeen ja tilaamanne oppaan lähettämiseen sekä yhteydenottoon ja tarjouksen valmisteluun. Perusteena on antamanne suostumus.</p>
       <p><strong>Kenelle tietoja luovutetaan:</strong> uutiskirjepalvelun ja lomakepalvelun tarjoajat toimivat henkilötietojen käsittelijöinä (PALVELUN_NIMI). Jos teette kaupan, tietoja käytetään kaupan toteuttamiseen autoliikkeessä, jonka kautta kauppa tehdään.</p>
@@ -362,6 +363,31 @@
     window.addEventListener('scroll', req, { passive: true });
     window.addEventListener('resize', req);
     update();
+  })();
+
+  // Lomakkeet: ennen kuin palvelun osoite on liitetty, lomake ei lähetä mitään, vaan kertoo siitä (ei hiljaista tietojen katoamista).
+  (function () {
+    function show(el, msg) { if (!el) return; el.textContent = msg; el.classList.add('show'); el.scrollIntoView({ block: 'nearest' }); }
+    function wire(form, status, okMsg) {
+      if (!form) return;
+      form.addEventListener('submit', function (e) {
+        var action = form.getAttribute('action') || '';
+        if (/LIITA_/.test(action)) {
+          e.preventDefault();
+          show(status, 'Lomake ei ole vielä käytössä. Ottakaa yhteyttä puhelimitse numeroon 050 311 0329.');
+          return;
+        }
+        if (/^https:\/\/script\.google\.com\//.test(action)) {
+          e.preventDefault();
+          var data = new URLSearchParams(new FormData(form));
+          fetch(action, { method: 'POST', mode: 'no-cors', body: data })
+            .then(function () { form.reset(); show(status, okMsg); })
+            .catch(function () { show(status, 'Lähetys ei onnistunut. Ottakaa yhteyttä puhelimitse numeroon 050 311 0329.'); });
+        }
+      });
+    }
+    wire(document.getElementById('contact'), document.getElementById('c-status'), 'Kiitos! Otan teihin yhteyttä mahdollisimman pian.');
+    wire(document.getElementById('signup'), document.getElementById('thanks'), 'Kiitos! Vahvistakaa tilaus sähköpostiin lähetetystä viestistä.');
   })();
   if (/[?&]kiitos/.test(location.search)) { document.getElementById('thanks').classList.add('show'); }
 </script>
