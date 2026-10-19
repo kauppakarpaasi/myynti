@@ -306,9 +306,8 @@
         <a class="wa" href="https://wa.me/358503110329" target="_blank" rel="noopener">Kirjoita WhatsAppissa</a>
       </div>
       <p class="contact-alt">
-        <!-- TODO: varmista, että osoite kauppakarpaasi@kauppakarpaasi.com on olemassa Google Workspacessa -->
         <a href="tel:+358503110329">050 311 0329</a>
-        <a href="mailto:kauppakarpaasi@kauppakarpaasi.com">kauppakarpaasi@kauppakarpaasi.com</a>
+        <a href="mailto:renny@kauppakarpaasi.com">renny@kauppakarpaasi.com</a>
       </p>
     </div>
   </section>
@@ -325,10 +324,10 @@
     <div>© <span id="year">2026</span> Kauppakarpaasi. Renny Poutanen.</div>
     <details id="tietosuoja">
       <summary>Tietosuojaseloste</summary>
-      <p><strong>Rekisterinpitäjä:</strong> Renny Poutanen. Yhteys: kauppakarpaasi@kauppakarpaasi.com. <!-- TODO: vahvista rekisterinpitäjä työnantajan kanssa, koska kauppa tehdään heidän kauttaan --></p>
+      <p><strong>Rekisterinpitäjä:</strong> Renny Poutanen. Yhteys: renny@kauppakarpaasi.com. <!-- TODO: vahvista rekisterinpitäjä työnantajan kanssa, koska kauppa tehdään heidän kauttaan --></p>
       <p><strong>Mitä tietoja kerätään:</strong> uutiskirjeen tilaajalta sähköpostiosoite ja etunimi. Yhteydenottolomakkeella nimi, puhelinnumero sekä vapaaehtoisesti toiveet, budjetti ja vaihtoauton tiedot.</p>
       <p><strong>Mihin tietoja käytetään:</strong> uutiskirjeen ja tilaamanne oppaan lähettämiseen sekä yhteydenottoon ja tarjouksen valmisteluun. Perusteena on antamanne suostumus.</p>
-      <p><strong>Kenelle tietoja luovutetaan:</strong> uutiskirjepalvelun ja lomakepalvelun tarjoajat toimivat henkilötietojen käsittelijöinä (PALVELUN_NIMI). Jos teette kaupan, tietoja käytetään kaupan toteuttamiseen autoliikkeessä, jonka kautta kauppa tehdään.</p>
+      <p><strong>Kenelle tietoja luovutetaan:</strong> uutiskirjepalvelun ja lomakepalvelun tarjoajat toimivat henkilötietojen käsittelijöinä (Klaviyo ja Google). Jos teette kaupan, tietoja käytetään kaupan toteuttamiseen autoliikkeessä, jonka kautta kauppa tehdään.</p>
       <p><strong>Säilytysaika:</strong> uutiskirjeen tiedot kunnes peruutatte tilauksen. Yhteydenottotiedot säilytetään vain niin kauan kuin yhteydenotto tai kauppa sitä edellyttää.</p>
       <p><strong>Oikeutenne:</strong> voitte pyytää tietojenne tarkastusta, oikaisua tai poistoa ja perua tilauksen tai suostumuksen milloin tahansa. Voitte myös tehdä valituksen tietosuojavaltuutetulle.</p>
     </details>
@@ -367,11 +366,28 @@
 
   // Lomakkeet: ennen kuin palvelun osoite on liitetty, lomake ei lähetä mitään, vaan kertoo siitä (ei hiljaista tietojen katoamista).
   (function () {
+    var KLAVIYO = { company: 'LIITA_KLAVIYO_YLEINEN_AVAIN', list: 'LIITA_KLAVIYO_LISTA_ID' };
     function show(el, msg) { if (!el) return; el.textContent = msg; el.classList.add('show'); el.scrollIntoView({ block: 'nearest' }); }
     function wire(form, status, okMsg) {
       if (!form) return;
       form.addEventListener('submit', function (e) {
         var action = form.getAttribute('action') || '';
+        if (form.id === 'signup' && !/LIITA_/.test(KLAVIYO.company + KLAVIYO.list)) {
+          e.preventDefault();
+          var fd = new FormData(form);
+          if (fd.get('website')) return;
+          var attrs = { email: fd.get('email') };
+          if (fd.get('fname')) attrs.first_name = fd.get('fname');
+          fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(KLAVIYO.company), {
+            method: 'POST',
+            headers: { 'revision': '2024-10-15', 'content-type': 'application/json' },
+            body: JSON.stringify({ data: { type: 'subscription', attributes: { profile: { data: { type: 'profile', attributes: attrs } } }, relationships: { list: { data: { type: 'list', id: KLAVIYO.list } } } } })
+          }).then(function (r) {
+            if (!r.ok) throw new Error(r.status);
+            form.reset(); show(status, okMsg);
+          }).catch(function () { show(status, 'Tilaus ei onnistunut. Yrittäkää uudelleen tai ottakaa yhteyttä puhelimitse numeroon 050 311 0329.'); });
+          return;
+        }
         if (/LIITA_/.test(action)) {
           e.preventDefault();
           show(status, 'Lomake ei ole vielä käytössä. Ottakaa yhteyttä puhelimitse numeroon 050 311 0329.');
